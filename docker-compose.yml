@@ -1,0 +1,52 @@
+services:
+  ran-device:
+    image: ghcr.io/notconf/notconf:latest
+    container_name: ran-device
+    ports:
+      - "830:830"
+    volumes:
+      - ./yang-models/common:/yang-modules:rw
+      - ./yang-models/ran/startup:/yang-modules/startup:ro
+#      - ./yang-models/ran:/yang-modules:rw
+    environment:
+      - DEVICE_TYPE=ran
+      - DEVICE_NAME=ran-device
+    networks:
+      - telco-net
+    hostname: ran-device
+
+  router-device:
+    image: ghcr.io/notconf/notconf:latest
+    container_name: router-device
+    ports:
+      - "831:830"
+    volumes:
+      - ./yang-models/common:/yang-modules:rw
+      - ./yang-models/router/startup:/yang-modules/startup:ro
+#      - ./yang-models/router:/yang-modules:rw
+    environment:
+      - DEVICE_TYPE=router
+      - DEVICE_NAME=router-device
+    networks:
+      - telco-net
+    hostname: router-device
+
+  core-device:
+    image: ghcr.io/notconf/notconf:latest
+    container_name: core-device
+    ports:
+      - "832:830"
+    volumes:
+      - ./yang-models/common:/yang-modules:rw
+      - ./yang-models/core/startup:/yang-modules/startup:ro
+#      - ./yang-models/core:/yang-modules:rw
+    environment:
+      - DEVICE_TYPE=core
+      - DEVICE_NAME=core-device
+    networks:
+      - telco-net
+    hostname: core-device
+
+networks:
+  telco-net:
+    driver: bridge
