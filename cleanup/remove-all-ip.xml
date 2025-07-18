@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interfaces xmlns="urn:ietf:params:xml:ns:yang:ietf-interfaces">
+  <interface>
+    <name>eth0</name>
+    <ipv4 xmlns="urn:ietf:params:xml:ns:yang:ietf-ip" 
+          xmlns:xc="urn:ietf:params:xml:ns:netconf:base:1.0" 
+          xc:operation="delete"/>
+  </interface>
+  <interface>
+    <name>eth1</name>
+    <ipv4 xmlns="urn:ietf:params:xml:ns:yang:ietf-ip" 
+          xmlns:xc="urn:ietf:params:xml:ns:netconf:base:1.0" 
+          xc:operation="delete"/>
+  </interface>
+  <interface>
+    <name>eth2</name>
+    <ipv4 xmlns="urn:ietf:params:xml:ns:yang:ietf-ip" 
+          xmlns:xc="urn:ietf:params:xml:ns:netconf:base:1.0" 
+          xc:operation="delete"/>
+  </interface>
+  <interface>
+    <name>backhaul0</name>
+    <ipv4 xmlns="urn:ietf:params:xml:ns:yang:ietf-ip" 
+          xmlns:xc="urn:ietf:params:xml:ns:netconf:base:1.0" 
+          xc:operation="delete"/>
+  </interface>
+  <interface>
+    <name>lo0</name>
+    <ipv4 xmlns="urn:ietf:params:xml:ns:yang:ietf-ip" 
+          xmlns:xc="urn:ietf:params:xml:ns:netconf:base:1.0" 
+          xc:operation="delete"/>
+  </interface>
+</interfaces>

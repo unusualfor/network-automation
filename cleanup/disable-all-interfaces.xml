@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interfaces xmlns="urn:ietf:params:xml:ns:yang:ietf-interfaces">
+  <interface>
+    <name>eth0</name>
+    <enabled>false</enabled>
+  </interface>
+  <interface>
+    <name>eth1</name>
+    <enabled>false</enabled>
+  </interface>
+  <interface>
+    <name>eth2</name>
+    <enabled>false</enabled>
+  </interface>
+  <interface>
+    <name>backhaul0</name>
+    <enabled>false</enabled>
+  </interface>
+  <interface>
+    <name>radio0</name>
+    <enabled>false</enabled>
+  </interface>
+  <interface>
+    <name>lo0</name>
+    <enabled>false</enabled>
+  </interface>
+</interfaces>
