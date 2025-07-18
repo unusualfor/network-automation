@@ -1,6 +1,6 @@
 services:
   ran-device:
-    image: ghcr.io/notconf/notconf:latest
+    image: ghcr.io/notconf/notconf:14265929521 
     container_name: ran-device
     ports:
       - "830:830"
@@ -16,7 +16,7 @@ services:
     hostname: ran-device
 
   router-device:
-    image: ghcr.io/notconf/notconf:latest
+    image: ghcr.io/notconf/notconf:14265929521 
     container_name: router-device
     ports:
       - "831:830"
@@ -32,7 +32,7 @@ services:
     hostname: router-device
 
   core-device:
-    image: ghcr.io/notconf/notconf:latest
+    image: ghcr.io/notconf/notconf:14265929521 
     container_name: core-device
     ports:
       - "832:830"
