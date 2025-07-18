@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+      <interfaces xmlns="urn:ietf:params:xml:ns:yang:ietf-interfaces">
+        <interface>
+          <name>eth0</name>
+          <ipv4 xmlns="urn:ietf:params:xml:ns:yang:ietf-ip" 
+                xmlns:nc="urn:ietf:params:xml:ns:netconf:base:1.0" 
+                nc:operation="replace">
+            <enabled>true</enabled>
+            <address>
+              <ip>192.168.101.100</ip>
+              <prefix-length>24</prefix-length>
+            </address>
+          </ipv4>
+        </interface>
+      </interfaces>

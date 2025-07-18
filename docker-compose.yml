@@ -7,7 +7,6 @@ services:
     volumes:
       - ./yang-models/common:/yang-modules:rw
       - ./yang-models/ran/startup:/yang-modules/startup:ro
-#      - ./yang-models/ran:/yang-modules:rw
     environment:
       - DEVICE_TYPE=ran
       - DEVICE_NAME=ran-device
@@ -23,7 +22,6 @@ services:
     volumes:
       - ./yang-models/common:/yang-modules:rw
       - ./yang-models/router/startup:/yang-modules/startup:ro
-#      - ./yang-models/router:/yang-modules:rw
     environment:
       - DEVICE_TYPE=router
       - DEVICE_NAME=router-device
@@ -39,7 +37,6 @@ services:
     volumes:
       - ./yang-models/common:/yang-modules:rw
       - ./yang-models/core/startup:/yang-modules/startup:ro
-#      - ./yang-models/core:/yang-modules:rw
     environment:
       - DEVICE_TYPE=core
       - DEVICE_NAME=core-device
