@@ -1,0 +1,36 @@
+---
+# Inventory file for backhaul network devices
+all:
+  children:
+    backhaul_devices:
+      hosts:
+        RAN:
+          ansible_host: localhost
+          ansible_port: 830
+          ansible_network_os: default
+          ansible_connection: netconf
+          ansible_user: admin
+          ansible_password: admin
+          backhaul_interfaces:
+            - backhaul0
+          
+        Router:
+          ansible_host: localhost
+          ansible_port: 831
+          ansible_network_os: default
+          ansible_connection: netconf
+          ansible_user: admin
+          ansible_password: admin
+          backhaul_interfaces:
+            - eth1
+            - eth2
+          
+        Core:
+          ansible_host: localhost
+          ansible_port: 832
+          ansible_network_os: default
+          ansible_connection: netconf
+          ansible_user: admin
+          ansible_password: admin
+          backhaul_interfaces:
+            - eth1

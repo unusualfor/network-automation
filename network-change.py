@@ -93,10 +93,10 @@ class BackhaulIPChanger:
         # Define new IP addresses for each interface
         # Using /30 subnets for point-to-point links
         ip_assignments = {
-            ('RAN', 'backhaul0'): '10.1.1.1',      # RAN backhaul
-            ('Router', 'eth1'): '10.1.1.2',        # Router side of RAN link
-            ('Router', 'eth2'): '10.1.2.1',        # Router side of Core link  
-            ('Core', 'eth1'): '10.1.2.2'           # Core side of Router link
+            ('RAN', 'backhaul0'): '10.0.1.1',      # RAN backhaul
+            ('Router', 'eth1'): '10.0.1.2',        # Router side of RAN link
+            ('Router', 'eth2'): '10.0.2.1',        # Router side of Core link  
+            ('Core', 'eth1'): '10.0.2.2'           # Core side of Router link
         }
         
         success_count = 0
@@ -114,8 +114,8 @@ class BackhaulIPChanger:
             print("🎉 All backhaul interfaces updated successfully!")
             print()
             print("📋 New IP Configuration:")
-            print("   RAN backhaul0:  10.1.1.1/30  ↔  Router eth1: 10.1.1.2/30")
-            print("   Router eth2:    10.1.2.1/30  ↔  Core eth1:   10.1.2.2/30")
+            print("   RAN backhaul0:  10.0.1.1/30  ↔  Router eth1: 10.0.1.2/30")
+            print("   Router eth2:    10.0.2.1/30  ↔  Core eth1:   10.0.2.2/30")
         else:
             print(f"⚠️  {total_changes - success_count} interface(s) failed to update")
         

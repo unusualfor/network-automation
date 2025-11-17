@@ -1,0 +1,179 @@
+---
+# Backhaul IP Address Changer - Ansible Playbook
+# This playbook replicates the functionality of backhaul_changer.py
+#
+# Usage:
+#   ansible-playbook -i inventory.yml backhaul_changer.yml --tags=auto
+#   ansible-playbook -i inventory.yml backhaul_changer.yml --tags=show
+#   ansible-playbook -i inventory.yml backhaul_changer.yml --tags=change -e "target_device=RAN target_interface=backhaul0 target_ip=10.2.1.1 target_prefix=30"
+
+- name: 🔧 Backhaul IP Address Management
+  hosts: backhaul_devices
+  gather_facts: false
+  vars:
+    # Default prefix length for point-to-point links
+    default_prefix_length: 30
+    
+    # Predefined IP assignments for 'auto' mode
+    ip_assignments:
+      RAN:
+        backhaul0:
+          ip: "10.0.1.1"
+          prefix: 30
+      Router:
+        eth1:
+          ip: "10.0.1.2"
+          prefix: 30
+        eth2:
+          ip: "10.0.2.1"
+          prefix: 30
+      Core:
+        eth1:
+          ip: "10.0.2.2"
+          prefix: 30
+
+  tasks:
+    # ===========================================
+    # SHOW MODE - Display current configuration
+    # ===========================================
+    - name: "📋 Show Current Configuration"
+      tags: [show, never]
+      block:
+        - name: "Get running configuration from {{ inventory_hostname }}"
+          ansible.netcommon.netconf_get:
+            source: running
+            filter: |
+              <interfaces xmlns="urn:ietf:params:xml:ns:yang:ietf-interfaces">
+                <interface>
+                  <name/>
+                  <ipv4 xmlns="urn:ietf:params:xml:ns:yang:ietf-ip">
+                    <address>
+                      <ip/>
+                      <prefix-length/>
+                    </address>
+                  </ipv4>
+                </interface>
+              </interfaces>
+          register: device_config
+          ignore_errors: true
+
+        - name: "Display configuration status for {{ inventory_hostname }}"
+          debug:
+            msg: |
+              📱 {{ inventory_hostname }}:
+              {% if device_config.failed %}
+                 ❌ Failed to retrieve configuration: {{ device_config.msg }}
+              {% else %}
+                 ✅ Configuration retrieved successfully
+                 Interfaces: {{ backhaul_interfaces | join(', ') }}
+              {% endif %}
+
+    # ===========================================
+    # AUTO MODE - Change all backhaul IPs
+    # ===========================================
+    - name: "🚀 Automatic Backhaul IP Configuration"
+      tags: [auto, never]
+      block:
+        - name: "Change IP addresses on {{ inventory_hostname }}"
+          ansible.netcommon.netconf_config:
+            target: running
+            content: |
+              <config xmlns="urn:ietf:params:xml:ns:netconf:base:1.0">
+                <interfaces xmlns="urn:ietf:params:xml:ns:yang:ietf-interfaces">
+                  {% for interface_name in backhaul_interfaces %}
+                  {% if interface_name in ip_assignments[inventory_hostname] %}
+                  <interface>
+                    <name>{{ interface_name }}</name>
+                    <ipv4 xmlns="urn:ietf:params:xml:ns:yang:ietf-ip"
+                          xmlns:nc="urn:ietf:params:xml:ns:netconf:base:1.0"
+                          nc:operation="replace">
+                      <enabled>true</enabled>
+                      <address>
+                        <ip>{{ ip_assignments[inventory_hostname][interface_name].ip }}</ip>
+                        <prefix-length>{{ ip_assignments[inventory_hostname][interface_name].prefix }}</prefix-length>
+                      </address>
+                    </ipv4>
+                  </interface>
+                  {% endif %}
+                  {% endfor %}
+                </interfaces>
+              </config>
+          register: config_result
+          ignore_errors: true
+
+        - name: "Display result for {{ inventory_hostname }}"
+          debug:
+            msg: |
+              {% if config_result.failed %}
+              ❌ Failed to configure {{ inventory_hostname }}: {{ config_result.msg }}
+              {% else %}
+              ✅ Successfully configured {{ inventory_hostname }}:
+              {% for interface_name in backhaul_interfaces %}
+              {% if interface_name in ip_assignments[inventory_hostname] %}
+                 - {{ interface_name }}: {{ ip_assignments[inventory_hostname][interface_name].ip }}/{{ ip_assignments[inventory_hostname][interface_name].prefix }}
+              {% endif %}
+              {% endfor %}
+              {% endif %}
+
+    # ===========================================
+    # CHANGE MODE - Change specific interface
+    # ===========================================
+    - name: "🔧 Custom IP Configuration"
+      tags: [change, never]
+      when: 
+        - target_device is defined
+        - target_interface is defined
+        - target_ip is defined
+        - inventory_hostname == target_device
+      block:
+        - name: "Validate input parameters"
+          assert:
+            that:
+              - target_ip is match('^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$')
+              - target_prefix | default(30) | int <= 32
+              - target_prefix | default(30) | int >= 0
+            fail_msg: "Invalid IP address or prefix length"
+            success_msg: "Input parameters validated"
+
+        - name: "Change IP on {{ inventory_hostname }}:{{ target_interface }}"
+          ansible.netcommon.netconf_config:
+            target: running
+            content: |
+              <config xmlns="urn:ietf:params:xml:ns:netconf:base:1.0">
+                <interfaces xmlns="urn:ietf:params:xml:ns:yang:ietf-interfaces">
+                  <interface>
+                    <name>{{ target_interface }}</name>
+                    <ipv4 xmlns="urn:ietf:params:xml:ns:yang:ietf-ip"
+                          xmlns:nc="urn:ietf:params:xml:ns:netconf:base:1.0"
+                          nc:operation="replace">
+                      <enabled>true</enabled>
+                      <address>
+                        <ip>{{ target_ip }}</ip>
+                        <prefix-length>{{ target_prefix | default(30) }}</prefix-length>
+                      </address>
+                    </ipv4>
+                  </interface>
+                </interfaces>
+              </config>
+          register: custom_config_result
+
+        - name: "Display custom configuration result"
+          debug:
+            msg: |
+              ✅ Successfully changed {{ inventory_hostname }}:{{ target_interface }} to {{ target_ip }}/{{ target_prefix | default(30) }}
+
+# Post-run summary play
+- name: 📊 Configuration Summary
+  hosts: localhost
+  gather_facts: false
+  tags: [auto, never]
+  tasks:
+    - name: Display final network topology
+      debug:
+        msg: |
+          
+          🎉 All backhaul interfaces updated successfully!
+          
+          📋 New IP Configuration:
+             RAN backhaul0:  10.0.1.1/30  ↔  Router eth1: 10.0.1.2/30
+             Router eth2:    10.0.2.1/30  ↔  Core eth1:   10.0.2.2/30
