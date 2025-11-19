@@ -1,6 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interfaces xmlns="urn:ietf:params:xml:ns:yang:ietf-interfaces">
   <interface>
+    <name>lo0</name>
+    <type xmlns:ianaift="urn:ietf:params:xml:ns:yang:iana-if-type">ianaift:softwareLoopback</type>
+    <description>Loopback interface</description>
+    <enabled>true</enabled>
+    <ipv4 xmlns="urn:ietf:params:xml:ns:yang:ietf-ip">
+      <enabled>true</enabled>
+      <address>
+        <ip>127.0.0.1</ip>
+        <prefix-length>32</prefix-length>
+      </address>
+    </ipv4>
+  </interface>
+
+  <interface>
     <name>eth0</name>
     <type xmlns:ianaift="urn:ietf:params:xml:ns:yang:iana-if-type">ianaift:ethernetCsmacd</type>
     <description>Management interface</description>

@@ -1,30 +1,45 @@
-NETCONF & Network Automation
+# NETCONF & Network Automation
 
----
+## Architecture 
 
-Part 1a) Check what is the initial configuration
+![Architecture](arch.png)
+
+## Setup
+
+Install the following in your Linux distribution:
+* docker
+* docker compose
+* python3
+* pip3
+    * ncclient
+    * netconf-console2
+    * paramiko
+* ansible
+
+Depending on the distribution, only one of the two commands below will work:
+    docker-compose up
+
+    docker compose up
+
+## Exercise 1
+
+### Check initial configuration
 
 netconf-console2 --host localhost --port 830 --get-config 
 netconf-console2 --host localhost --port 830 --db=startup --get-config 
-netconf-console2 --host localhost --port 830 --db=runtime --get-config 
+netconf-console2 --host localhost --port 830 --db=candidate --get-config 
 
-Check wireshark
+### Modify network
 
----
+Modify operations/change-eth0.xml
 
-Part 1b) Modify network
-
-Modify cleanup/change-eth0.xml
-
-netconf-console2 --host localhost --port 830 --edit-config cleanup/change-eth0.xml
-netconf-console2 --host localhost --port 831 --edit-config cleanup/change-eth0.xml
-netconf-console2 --host localhost --port 832 --edit-config cleanup/change-eth0.xml
+netconf-console2 --host localhost --port 830 --edit-config operations/change-eth0.xml
+netconf-console2 --host localhost --port 831 --edit-config operations/change-eth0.xml
+netconf-console2 --host localhost --port 832 --edit-config operations/change-eth0.xml
 
 python network-check.py
 
----
-
-Part 1c) Work with candidate
+### Work with candidate
 
 netconf-console2 --host localhost --port 830 --db=candidate --edit-config cleanup/change-eth0.xml
 
@@ -38,6 +53,5 @@ netconf-console2 --host localhost --port 830 --db=startup --get-config | grep 19
 netconf-console2 --host localhost --port 830 --db=running --get-config | grep 192
 netconf-console2 --host localhost --port 830 --db=candidate --get-config | grep 192
 
----
+## Automate with Python 
 
-Part 2) 
