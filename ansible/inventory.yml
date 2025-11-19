@@ -2,7 +2,7 @@
 # Inventory file for backhaul network devices
 all:
   children:
-    backhaul_devices:
+    devices:
       hosts:
         RAN:
           ansible_host: localhost
@@ -11,7 +11,8 @@ all:
           ansible_connection: netconf
           ansible_user: admin
           ansible_password: admin
-          backhaul_interfaces:
+          device_interfaces:
+            - eth0
             - backhaul0
           
         Router:
@@ -21,7 +22,8 @@ all:
           ansible_connection: netconf
           ansible_user: admin
           ansible_password: admin
-          backhaul_interfaces:
+          device_interfaces:
+            - eth0
             - eth1
             - eth2
           
@@ -32,5 +34,6 @@ all:
           ansible_connection: netconf
           ansible_user: admin
           ansible_password: admin
-          backhaul_interfaces:
+          device_interfaces:
+            - eth0
             - eth1

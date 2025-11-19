@@ -82,7 +82,7 @@ The Python script uses `<n>` instead of `<name>` for the interface name tag. The
 To validate XML:
 ```bash
 # Extract and validate XML
-ansible-playbook backhaul_changer.yml --tags=auto --check -vvv | \
+ansible-playbook network_automation.yml --tags=auto --check -vvv | \
   grep -A 20 "<config" > test.xml
 
 # Validate against YANG model
@@ -215,10 +215,10 @@ ansible-inventory -i inventory.yml --list
 ansible-inventory -i inventory.yml --list | jq '.all.children'
 
 # Test with all hosts
-ansible-playbook -i inventory.yml backhaul_changer.yml --tags=show
+ansible-playbook -i inventory.yml network_automation.yml --tags=show
 
 # Test specific host
-ansible-playbook -i inventory.yml backhaul_changer.yml --tags=show --limit=RAN
+ansible-playbook -i inventory.yml network_automation.yml --tags=show --limit=RAN
 ```
 
 ---
@@ -242,16 +242,16 @@ tags: [always]       # Runs regardless of --tags (use carefully!)
 **Common Tag Patterns:**
 ```bash
 # Run only 'auto' tasks
-ansible-playbook backhaul_changer.yml --tags=auto
+ansible-playbook network_automation.yml --tags=auto
 
 # Run everything EXCEPT 'show'
-ansible-playbook backhaul_changer.yml --skip-tags=show
+ansible-playbook network_automation.yml --skip-tags=show
 
 # Run multiple tags
-ansible-playbook backhaul_changer.yml --tags=auto,show
+ansible-playbook network_automation.yml --tags=auto,show
 
 # List all available tags
-ansible-playbook backhaul_changer.yml --list-tags
+ansible-playbook network_automation.yml --list-tags
 ```
 
 ---
@@ -358,22 +358,22 @@ ansible-playbook playbook.yml --start-at-task="Change IP addresses"
 ### 4. Syntax Check
 ```bash
 # Validate playbook syntax
-ansible-playbook backhaul_changer.yml --syntax-check
+ansible-playbook network_automation.yml --syntax-check
 
 # Validate inventory
 ansible-inventory -i inventory.yml --list
 
 # Check for common issues
-ansible-lint backhaul_changer.yml
+ansible-lint network_automation.yml
 ```
 
 ### 5. Capture Full Output
 ```bash
 # Save to file
-ansible-playbook backhaul_changer.yml -vvv > debug.log 2>&1
+ansible-playbook network_automation.yml -vvv > debug.log 2>&1
 
 # With timestamp
-ansible-playbook backhaul_changer.yml -vvv 2>&1 | ts '[%Y-%m-%d %H:%M:%S]' > debug.log
+ansible-playbook network_automation.yml -vvv 2>&1 | ts '[%Y-%m-%d %H:%M:%S]' > debug.log
 ```
 
 ---

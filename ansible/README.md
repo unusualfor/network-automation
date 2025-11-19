@@ -1,68 +1,15 @@
-# Backhaul IP Address Changer - Ansible Translation
+# Network Automation - Ansible Playbook
 
-This directory contains an Ansible playbook that replicates the functionality of the Python `backhaul_changer.py` script.
+This directory contains an Ansible playbook that configures 3 network devices with NETCONF.
 
 ## 📁 Files
 
 - `inventory.yml` - Inventory file defining the NETCONF devices
-- `backhaul_changer.yml` - Main playbook with all operations
+- `network_automation.yml` - Main playbook with all operations
 - `README.md` - This file
 - `ansible.cfg` - Ansible configuration (optional)
 
-## 🔄 Python vs Ansible Comparison
-
-### Python Script Approach
-```python
-# Object-oriented with methods
-changer = BackhaulIPChanger()
-changer.change_all_backhaul_ips()
-```
-
-### Ansible Approach
-```yaml
-# Declarative with tasks
-- name: Change IP addresses
-  ansible.netcommon.netconf_config:
-    content: "{{ xml_config }}"
-```
-
-## 📋 Usage
-
-### 1. Show Current Configuration
-**Python:**
-```bash
-python3 backhaul_changer.py show
-```
-
-**Ansible:**
-```bash
-ansible-playbook -i inventory.yml backhaul_changer.yml --tags=show
-```
-
-### 2. Automatic Configuration (Change All)
-**Python:**
-```bash
-python3 backhaul_changer.py auto
-```
-
-**Ansible:**
-```bash
-ansible-playbook -i inventory.yml backhaul_changer.yml --tags=auto
-```
-
-### 3. Change Specific Interface
-**Python:**
-```bash
-python3 backhaul_changer.py change RAN backhaul0 10.2.1.1 30
-```
-
-**Ansible:**
-```bash
-ansible-playbook -i inventory.yml backhaul_changer.yml --tags=change \
-  -e "target_device=RAN target_interface=backhaul0 target_ip=10.2.1.1 target_prefix=30"
-```
-
-## 🔑 Key Differences
+## 🔑 Key Differences between Python and Ansible
 
 ### 1. **Connection Management**
 - **Python**: Manual connection handling with try/except blocks
@@ -119,17 +66,17 @@ Ansible has native NETCONF modules (`ansible.netcommon.netconf_config`, `netconf
 
 ### Run on subset of devices:
 ```bash
-ansible-playbook -i inventory.yml backhaul_changer.yml --tags=auto --limit=RAN,Router
+ansible-playbook -i inventory.yml network_automation.yml --tags=auto --limit=RAN,Router
 ```
 
 ### Dry run (check mode):
 ```bash
-ansible-playbook -i inventory.yml backhaul_changer.yml --tags=auto --check
+ansible-playbook -i inventory.yml network_automation.yml --tags=auto --check
 ```
 
 ### Verbose output:
 ```bash
-ansible-playbook -i inventory.yml backhaul_changer.yml --tags=show -vvv
+ansible-playbook -i inventory.yml network_automation.yml --tags=show -vvv
 ```
 
 ## 🔍 What's the Same?

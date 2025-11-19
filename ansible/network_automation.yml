@@ -1,14 +1,13 @@
 ---
-# Backhaul IP Address Changer - Ansible Playbook
-# This playbook replicates the functionality of backhaul_changer.py
+# Network Automation - Ansible Playbook
 #
 # Usage:
-#   ansible-playbook -i inventory.yml backhaul_changer.yml --tags=auto
-#   ansible-playbook -i inventory.yml backhaul_changer.yml --tags=show
-#   ansible-playbook -i inventory.yml backhaul_changer.yml --tags=change -e "target_device=RAN target_interface=backhaul0 target_ip=10.2.1.1 target_prefix=30"
+#   ansible-playbook -i inventory.yml network_automation.yml --tags=auto
+#   ansible-playbook -i inventory.yml network_automation.yml --tags=show
+#   ansible-playbook -i inventory.yml network_automation.yml --tags=change -e "target_device=RAN target_interface=backhaul0 target_ip=10.2.1.1 target_prefix=30"
 
-- name: 🔧 Backhaul IP Address Management
-  hosts: backhaul_devices
+- name: Network Automation
+  hosts: devices
   gather_facts: false
   vars:
     # Default prefix length for point-to-point links
@@ -17,10 +16,16 @@
     # Predefined IP assignments for 'auto' mode
     ip_assignments:
       RAN:
+        eth0:
+          ip: "192.168.1.10"
+          prefix: 24
         backhaul0:
           ip: "10.0.1.1"
           prefix: 30
       Router:
+        eth0:
+          ip: "192.168.1.20"
+          prefix: 24
         eth1:
           ip: "10.0.1.2"
           prefix: 30
@@ -28,6 +33,9 @@
           ip: "10.0.2.1"
           prefix: 30
       Core:
+        eth0:
+          ip: "192.168.1.30"
+          prefix: 24
         eth1:
           ip: "10.0.2.2"
           prefix: 30
@@ -65,22 +73,23 @@
                  ❌ Failed to retrieve configuration: {{ device_config.msg }}
               {% else %}
                  ✅ Configuration retrieved successfully
-                 Interfaces: {{ backhaul_interfaces | join(', ') }}
+                 Interfaces: {{ device_interfaces | join(', ') }}
               {% endif %}
 
     # ===========================================
-    # AUTO MODE - Change all backhaul IPs
+    # AUTO MODE - Change all IPs
     # ===========================================
-    - name: "🚀 Automatic Backhaul IP Configuration"
+    - name: "🚀 Automatic IP Configuration"
       tags: [auto, never]
       block:
         - name: "Change IP addresses on {{ inventory_hostname }}"
           ansible.netcommon.netconf_config:
-            target: running
+            target: candidate
+            commit: true
             content: |
               <config xmlns="urn:ietf:params:xml:ns:netconf:base:1.0">
                 <interfaces xmlns="urn:ietf:params:xml:ns:yang:ietf-interfaces">
-                  {% for interface_name in backhaul_interfaces %}
+                  {% for interface_name in device_interfaces %}
                   {% if interface_name in ip_assignments[inventory_hostname] %}
                   <interface>
                     <name>{{ interface_name }}</name>
@@ -108,7 +117,7 @@
               ❌ Failed to configure {{ inventory_hostname }}: {{ config_result.msg }}
               {% else %}
               ✅ Successfully configured {{ inventory_hostname }}:
-              {% for interface_name in backhaul_interfaces %}
+              {% for interface_name in device_interfaces %}
               {% if interface_name in ip_assignments[inventory_hostname] %}
                  - {{ interface_name }}: {{ ip_assignments[inventory_hostname][interface_name].ip }}/{{ ip_assignments[inventory_hostname][interface_name].prefix }}
               {% endif %}
@@ -137,7 +146,8 @@
 
         - name: "Change IP on {{ inventory_hostname }}:{{ target_interface }}"
           ansible.netcommon.netconf_config:
-            target: running
+            target: candidate
+            commit: true
             content: |
               <config xmlns="urn:ietf:params:xml:ns:netconf:base:1.0">
                 <interfaces xmlns="urn:ietf:params:xml:ns:yang:ietf-interfaces">
@@ -172,8 +182,4 @@
       debug:
         msg: |
           
-          🎉 All backhaul interfaces updated successfully!
-          
-          📋 New IP Configuration:
-             RAN backhaul0:  10.0.1.1/30  ↔  Router eth1: 10.0.1.2/30
-             Router eth2:    10.0.2.1/30  ↔  Core eth1:   10.0.2.2/30
+          🎉 All interfaces updated successfully!          
