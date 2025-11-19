@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Backhaul IP Address Changer
+IP Address Changer
 Simple script to change IP addresses on backhaul interfaces
 """
 
