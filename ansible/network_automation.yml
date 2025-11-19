@@ -17,7 +17,7 @@
     ip_assignments:
       RAN:
         eth0:
-          ip: "192.168.1.10"
+          ip: "192.168.1.11"
           prefix: 24
         backhaul0:
           ip: "10.0.1.1"
@@ -86,6 +86,7 @@
           ansible.netcommon.netconf_config:
             target: candidate
             commit: true
+            save: true
             content: |
               <config xmlns="urn:ietf:params:xml:ns:netconf:base:1.0">
                 <interfaces xmlns="urn:ietf:params:xml:ns:yang:ietf-interfaces">
@@ -148,6 +149,7 @@
           ansible.netcommon.netconf_config:
             target: candidate
             commit: true
+            save: true
             content: |
               <config xmlns="urn:ietf:params:xml:ns:netconf:base:1.0">
                 <interfaces xmlns="urn:ietf:params:xml:ns:yang:ietf-interfaces">

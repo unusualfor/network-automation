@@ -18,9 +18,11 @@ Install the following in your Linux distribution:
 
 Depending on the distribution, only one of the two commands below will work:
 
+```bash
     docker-compose up
 
     docker compose up
+```
 
 ## Exercise 1
 
@@ -29,12 +31,6 @@ Depending on the distribution, only one of the two commands below will work:
 Once everything is up and running, check the current configuration for the *running*, *startup* and *candidate* datastores using *netconf-console2* with *--get-config*.
 
 1. Are there differences between the datastores? Why?
-
-    netconf-console2 --host localhost --port 830 --get-config 
-
-    netconf-console2 --host localhost --port 830 --db=startup --get-config 
-
-    netconf-console2 --host localhost --port 830 --db=candidate --get-config 
 
 ### Modify running datastore
 
@@ -51,12 +47,6 @@ Activities:
     * What would happen if a device gets restarted in such a case?
     * What would happen to the network if the configuration applied to BBU eth1 was not matching the network configuration applied to Router eth1? Was there any check available to prevent this?
 * Further checks: check that the three devices have consistent IP addresses with the *network-check.py* script and, in case not, modify IP addresses again
-
-netconf-console2 --host localhost --port 830 --edit-config operations/change-eth0.xml
-netconf-console2 --host localhost --port 831 --edit-config operations/change-eth0.xml
-netconf-console2 --host localhost --port 832 --edit-config operations/change-eth0.xml
-
-python network-check.py
 
 ### Work with candidate
 
@@ -87,26 +77,13 @@ Bonus:
     * Are there differences between the datastores? Why? 
     * What would happen if a device gets restarted in such a case?
 
-    netconf-console2 --host localhost --port 830 --db=candidate --edit-config operations/change-eth0.xml
-    netconf-console2 --host localhost --port 830 --db=startup --get-config -x /interfaces
-    netconf-console2 --host localhost --port 830 --db=running --get-config -x /interfaces
-    netconf-console2 --host localhost --port 830 --db=candidate --get-config -x /interfaces
-
-    netconf-console2 --host localhost --port 830 --commit
-    netconf-console2 --host localhost --port 830 --db=startup --get-config -x /interfaces
-    netconf-console2 --host localhost --port 830 --db=running --get-config -x /interfaces
-    netconf-console2 --host localhost --port 830 --db=candidate --get-config -x /interfaces
-
-    netconf-console2 --host localhost --port 830 --copy-running-to-startup
-    netconf-console2 --host localhost --port 830 --db=startup --get-config -x /interfaces
-    netconf-console2 --host localhost --port 830 --db=running --get-config -x /interfaces
-    netconf-console2 --host localhost --port 830 --db=candidate --get-config -x /interfaces
-
 ## Exercise 2 - Automate with Python 
 
 Start by restarting the system with 
 
+```bash
     docker compose restart
+```
 
 Create a python script that makes use of [ncclient](https://pypi.org/project/ncclient/) to perform the following: 
 1. Connect to each device
@@ -120,15 +97,33 @@ Activities:
 
 Start by restarting the system with 
 
+```bash
     docker compose restart
+```
 
+1. Look at the files inside *ansible* folder
+    * inventory.yml -> The inventory
+    * network_automation.yml -> The playbook
+    * README.md, COMPARISON.md, TROUBLESHOOTING.md for general knowledge
+2. Run the playbook with
+```bash
+    ansible-playbook -i inventory.yml network_automation.yml --tags=auto
+```
+3. Check with *netconf-console2* (or python or directly from ansible) the *--get-config* operation, towards *running*, *startup* and *candidate*
 
+Activities:
+* What is the playbook doing?
+* Is the playbook working with candidate, running, startup or all of them?
+* How does this approach scale? What is the impact in terms of time spent if we have to manage 100 RAN devices, 50 router devices and 1 core network device?
+* What is the time spent compared to the other solutions?
 
 ## Assignment 
 
 Start by restarting the system with 
 
+```bash
     docker compose restart
+```
 
 Create a python script that makes use of [ncclient](https://pypi.org/project/ncclient/) to perform the following tasks. Feel free to reuse any code already available while making sure to comment the different functions. 
 1. Connect to each device
