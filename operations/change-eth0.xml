@@ -7,8 +7,8 @@
                 nc:operation="replace">
             <enabled>true</enabled>
             <address>
-              <ip>10.100.1.1</ip>
-              <prefix-length>30</prefix-length>
+              <ip>192.168.1.66</ip>
+              <prefix-length>24</prefix-length>
             </address>
           </ipv4>
         </interface>

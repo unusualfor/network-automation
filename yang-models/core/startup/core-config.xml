@@ -22,7 +22,7 @@
     <ipv4 xmlns="urn:ietf:params:xml:ns:yang:ietf-ip">
       <enabled>true</enabled>
       <address>
-        <ip>192.168.1.30</ip>
+        <ip>192.168.100.30</ip>
         <prefix-length>24</prefix-length>
       </address>
     </ipv4>
@@ -36,7 +36,7 @@
     <ipv4 xmlns="urn:ietf:params:xml:ns:yang:ietf-ip">
       <enabled>true</enabled>
       <address>
-        <ip>10.0.2.2</ip>
+        <ip>10.0.172.2</ip>
         <prefix-length>30</prefix-length>
       </address>
     </ipv4>

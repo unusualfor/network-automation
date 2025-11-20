@@ -73,6 +73,12 @@ netconf-console2 --help  # should print help if installed
 
 ### 5. Start the Lab Environment
 
+Download the repo:
+```bash
+git clone https://github.com/unusualfor/network-automation.git
+cd network-automation/
+```
+
 Depending on your Docker Compose version, use one of the following:
 
 ```bash
@@ -87,7 +93,7 @@ docker compose up
 
 ### Check initial configuration
 
-Once everything is up and running, check the current configuration for the *running*, *startup* and *candidate* datastores using *netconf-console2* with *--get-config*.
+Once everything is up and running, check the current configuration for the *running*, *startup* and *candidate* datastores using [*netconf-console2*](https://pypi.org/project/netconf-console2/) with *--get-config*.
 
 1. Are there differences between the datastores? Why?
 
@@ -96,8 +102,8 @@ Once everything is up and running, check the current configuration for the *runn
 Copy and modify the file in *operations/change-eth0.xml* and use it to perform the following changes:
 
 1. For each device, update eth0 IPv4 address values to be consistently in 192.168.1.0/24. Use *netconf-console2* to perform *edit-config* towards the *running* datastore.
-2. Update the BBU-Router network to be in 10.0.1.0/30. Use *netconf-console2* to perform *edit-config* towards the *running* datastores. Make sure to configure the right interfaces of the devices.
-3. Update the Router-Core network to be in 10.0.2.0/30. Use *netconf-console2* to perform *edit-config* towards the *running* datastores. Make sure to configure the right interfaces of the devices.
+2. Update the BBU-Router network to be in 10.0.1.0/30. Use *netconf-console2* to perform *edit-config* towards the *running* datastore. Make sure to configure the right interfaces of the devices.
+3. Update the Router-Core network to be in 10.0.2.0/30. Use *netconf-console2* to perform *edit-config* towards the *running* datastore. Make sure to configure the right interfaces of the devices.
 
 Activities:
 * Check with *netconf-console2* with *--get-config*, towards *running*, *startup* and *candidate*
@@ -111,9 +117,9 @@ Activities:
 
 Copy and modify the file in *operations/change-eth0.xml* and use it to perform the following changes:
 
-1. For each device, update eth0 IPv4 address values to be consistently in 192.168.1.0/24. Use *netconf-console2* to perform *edit-config* towards the *candidate* datastore.
-2. Update the BBU-Router network to be in 10.0.100.0/30. Use *netconf-console2* to perform *edit-config* towards the *candidate* datastores. Make sure to configure the right interfaces of the devices.
-3. Update the Router-Core network to be in 10.0.200.0/30. Use *netconf-console2* to perform *edit-config* towards the *candidate* datastores. Make sure to configure the right interfaces of the devices.
+1. For each device, update eth0 IPv4 address values to be consistently in 192.168.1.0/24 (use different addresses with respect to the previous exercise). Use *netconf-console2* to perform *edit-config* towards the *candidate* datastore.
+2. Update the BBU-Router network to be in 10.0.100.0/30. Use *netconf-console2* to perform *edit-config* towards the *candidate* datastore. Make sure to configure the right interfaces of the devices.
+3. Update the Router-Core network to be in 10.0.200.0/30. Use *netconf-console2* to perform *edit-config* towards the *candidate* datastore. Make sure to configure the right interfaces of the devices.
 
 Activities:
 * Check with *netconf-console2* with *--get-config*, towards *running*, *startup* and *candidate*
@@ -124,7 +130,8 @@ Activities:
 * How does this approach scale? What is the impact in terms of time spent if we have to manage 100 RAN devices, 50 router devices and 1 core network device?
 * Further checks: check that the three devices have consistent IP addresses with the *network-check.py* script and, in case not, modify IP addresses again
 
-Bonus:
+### Bonus
+
 1. Perform a commit operation with *netconf-console2* so that the *candidate* datastore gets committed to the *running* and perform above checks again
 * Check with *netconf-console2* with *--get-config*, towards *running*, *startup* and *candidate*
     * Would the current configuration allow the system to work properly?
@@ -142,7 +149,7 @@ Bonus:
 Start by restarting the system with 
 
 ```bash
-    docker compose restart
+docker compose restart
 ```
 
 Create a python script that makes use of [ncclient](https://pypi.org/project/ncclient/) to perform the following: 
@@ -165,7 +172,7 @@ Activities:
 Start by restarting the system with 
 
 ```bash
-    docker compose restart
+docker compose restart
 ```
 
 1. Look at the files inside *ansible* folder
@@ -174,7 +181,7 @@ Start by restarting the system with
     * README.md, COMPARISON.md, TROUBLESHOOTING.md for general knowledge
 2. Run the playbook with
 ```bash
-    ansible-playbook -i inventory.yml network_automation.yml --tags=auto
+ansible-playbook -i inventory.yml network_automation.yml --tags=auto
 ```
 3. Check with *netconf-console2* (or python or directly from ansible) the *--get-config* operation, towards *running*, *startup* and *candidate*
 
@@ -190,7 +197,7 @@ Activities:
 Start by restarting the system with 
 
 ```bash
-    docker compose restart
+docker compose restart
 ```
 
 Create a python script that makes use of [ncclient](https://pypi.org/project/ncclient/) to perform the following tasks. Feel free to reuse any code already available while making sure to comment the different functions. 
