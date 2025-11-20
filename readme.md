@@ -1,27 +1,86 @@
 # NETCONF & Network Automation
 
+# Table of Contents
+- [Architecture](#architecture)
+- [Setup](#setup)
+- [Exercise 1](#exercise-1)
+- [Exercise 2 - Automate with Python](#exercise-2---automate-with-python)
+- [Exercise 3 - Automate with Ansible](#exercise-3---automate-with-ansible)
+- [Assignment](#assignment)
+- [Troubleshooting](#troubleshooting)
+
+
 ## Architecture 
 
 ![Architecture](arch.png)
 
+
 ## Setup
 
-Install the following in your Linux distribution:
-* docker
-* docker compose
-* python3
-* pip3
-    * ncclient
-    * netconf-console2
-    * paramiko
-* ansible
+### 1. Prerequisites
 
-Depending on the distribution, only one of the two commands below will work:
+You need the following tools installed on your system (any Linux distribution, including WSL, macOS, or native):
+
+- **Docker** 
+- **Docker Compose**
+- **Python 3** and **pip3**
+- **Ansible**
+- **Python packages:** `ncclient`, `netconf-console2`, `paramiko`
+
+
+**For WSL users:**
+In case Docker is not already installed, you have two options for Docker setup:
+
+1. **Docker Desktop for Windows (Slower, but recommended for entry-level users):**
+    - Install [Docker Desktop for Windows](https://docs.docker.com/desktop/install/windows-install/) and ensure it is running.
+    - Enable WSL2 integration in Docker Desktop settings.
+    - This is the most seamless experience and is required if you want to use GUI tools, volume mounts, or need full Windows integration.
+
+2. **Native Docker inside WSL Linux (Recommended native integration in the distro, but for advanced users):**
+    - You can install Docker directly in your WSL distribution using your package manager (e.g., `sudo apt install docker.io` for Ubuntu).
+    - Depending on the distro you might need to manually start the Docker daemon (e.g., `sudo service docker start`) each session, and handle permissions yourself.
+
+### 2. Install Required Tools
+
+Install the above tools using your distribution's package manager or download from the official websites:
+
+- [Docker installation guide](https://docs.docker.com/get-docker/)
+- [Docker Compose installation](https://docs.docker.com/compose/install/)
+- [Python downloads](https://www.python.org/downloads/)
+- [Ansible installation guide](https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html)
+
+**Install Python dependencies:**
+```bash
+pip3 install --user ncclient netconf-console2 paramiko ansible
+```
+
+### 3. (Optional) Add Your User to the Docker Group (for non-root usage)
+```bash
+sudo usermod -aG docker $USER
+# Then restart your shell or run: exec su -l $USER
+```
+
+### 4. Verify Installations
 
 ```bash
-    docker-compose up
+docker --version
+docker compose version   # or: docker-compose --version
+python3 --version
+pip3 --version
+ansible --version
+netconf-console2 --help  # should print help if installed
+```
 
-    docker compose up
+### 5. Start the Lab Environment
+
+Depending on your Docker Compose version, use one of the following:
+
+```bash
+# For docker-compose v1
+docker-compose up
+
+# For docker-compose v2 (recommended)
+docker compose up
 ```
 
 ## Exercise 1
@@ -77,7 +136,8 @@ Bonus:
     * Are there differences between the datastores? Why? 
     * What would happen if a device gets restarted in such a case?
 
-## Exercise 2 - Automate with Python 
+
+## Exercise 2 - Automate with Python
 
 Start by restarting the system with 
 
@@ -90,8 +150,15 @@ Create a python script that makes use of [ncclient](https://pypi.org/project/ncc
 2. Use *edit-config* towards the *running* datastore and modify eth0 IPv4 address values to be consistently in 192.168.1.0/24
 3. Check the devices with *get-config* and ensure all eth0 interfaces are correctly configured to be in 192.168.1.0/24
 
+**Tip:** See `exercise2_baseline.py` for a starting point and `exercise2_solution.py` for a complete example.
+
+#### Success Criteria
+- All eth0 interfaces on all devices have an IP in 192.168.1.0/24.
+- `network-check.py` reports no inconsistencies.
+
 Activities:
 * How does this approach scale? What is the impact in terms of time spent if we have to manage 100 RAN devices, 50 router devices and 1 core network device?
+
 
 ## Exercise 3 - Automate with Ansible
 
@@ -117,6 +184,7 @@ Activities:
 * How does this approach scale? What is the impact in terms of time spent if we have to manage 100 RAN devices, 50 router devices and 1 core network device?
 * What is the time spent compared to the other solutions?
 
+
 ## Assignment 
 
 Start by restarting the system with 
@@ -128,7 +196,14 @@ Start by restarting the system with
 Create a python script that makes use of [ncclient](https://pypi.org/project/ncclient/) to perform the following tasks. Feel free to reuse any code already available while making sure to comment the different functions. 
 1. Connect to each device
 2. Use *edit-config* towards the *candidate* datastore and modify eth0 IPv4 address values to be consistently in 192.168.1.0/24
-3. Use *edit-config* towards the *candidate* datastore and modify backhaul IPv4 address values ({RAN: [backhaul0], Router: [eth1, eth2], Core: [eth1]}) to be consistently in the related networks (BBU-Router network to be in 10.0.1.0/30, Router-Core network to be in 10.0.2.0/30).
+3. Use *edit-config* towards the *candidate* datastore and modify **backhaul IPv4 address values** as follows:
+    - **RAN:** configure `backhaul0`
+    - **Router:** configure `eth1` and `eth2`
+    - **Core:** configure `eth1`
+   
+    Assign the interfaces to be consistently in the related networks:
+    - **BBU-Router network:** `10.0.1.0/30`
+    - **Router-Core network:** `10.0.2.0/30`
 4. Check the devices with *get-config* towards the *candidate* datastore and ensure all interfaces are correctly configured as expected.
 If confirmed, perform a *commit* operation and check the *running* datastore.
 
@@ -139,3 +214,22 @@ Activities:
     * What would happen if a device gets restarted in such a case?
 * How does this approach scale? What is the impact in terms of time spent if we have to manage 100 RAN devices, 50 router devices and 1 core network device?
 * Further checks: check that the three devices have consistent IP addresses with the *network-check.py* script and, in case not, modify IP addresses again
+
+
+## Troubleshooting
+
+**Common Issues:**
+
+- **Cannot connect to device:**
+    - Check device IP, port, username, and password.
+    - Ensure the device is running and reachable from your host.
+- **ncclient not installed:**
+    - Run `pip3 install ncclient`.
+- **netconf-console2 not found:**
+    - Run `pip3 install netconf-console2` or check your PATH.
+- **Ansible errors:**
+    - Check your inventory and playbook syntax.
+- **IP address not updated:**
+    - Verify your XML payload and device YANG model compatibility.
+
+If you encounter other issues, check the logs or ask your instructor for help.
