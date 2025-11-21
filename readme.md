@@ -111,7 +111,7 @@ Activities:
     * Would the current configuration allow the system to work properly?
     * Are there differences between the datastores? Why? 
     * What would happen if a device gets restarted in such a case?
-    * What would happen to the network if the configuration applied to BBU eth1 was not matching the network configuration applied to Router eth1? Was there any check available to prevent this?
+    * What would happen to the network if the configuration applied to BBU backhaul0 was not matching the network configuration applied to Router eth1? Was there any check available to prevent this?
 * Further checks: check that the three devices have consistent IP addresses with the *network-check.py* script and, in case not, modify IP addresses again
 
 ### Work with candidate
@@ -127,7 +127,7 @@ Activities:
     * Would the current configuration allow the system to work properly?
     * Are there differences between the datastores? Why? 
     * What would happen if a device gets restarted in such a case?
-    * What would happen to the network if the configuration applied to BBU eth1 was not matching the network configuration applied to Router eth1? Was there any check available to prevent this?
+    * What would happen to the network if the configuration applied to BBU backhaul0 was not matching the network configuration applied to Router eth1? Was there any check available to prevent this?
 * How does this approach scale? What is the impact in terms of time spent if we have to manage 100 RAN devices, 50 router devices and 1 core network device?
 * Further checks: check that the three devices have consistent IP addresses with the *network-check.py* script and, in case not, modify IP addresses again
 
