@@ -8,6 +8,7 @@
 - [Exercise 3 - Automate with Ansible](#exercise-3---automate-with-ansible)
 - [Assignment](#assignment)
 - [Troubleshooting](#troubleshooting)
+- [Reference Commands](#reference-commands)
 
 
 ## Architecture 
@@ -240,3 +241,25 @@ Activities:
     - Verify your XML payload and device YANG model compatibility.
 
 If you encounter other issues, check the logs or ask your instructor for help.
+
+## Reference commands
+
+Retrieve current configuration of *running* datastore with *netconf-console2*:
+```bash
+netconf-console2 --host localhost --port 830 --user admin --password admin --db running --get-config 
+```
+
+Modify current configuration of *candidate* datastore with the content of *operations/change-eth0.xml*:
+```bash
+netconf-console2 --host localhost --port 830 --user admin --password admin --db candidate --edit-config operations/change-eth0.xml 
+```
+
+Retrieve current configuration of *startup* datastore with *netconf-console2*, by filtering per the *interfaces* xpath:
+```bash
+netconf-console2 --host localhost --port 830 --user admin --password admin --db running --get-config -x /interfaces
+```
+
+Retrieve current configuration of *startup* datastore with *netconf-console2*, by filtering per the *eth0 interface* xpath:
+```bash
+netconf-console2 --host localhost --port 830 --user admin --password admin --db startup --get-config -x '/interfaces/interface[name="eth0"]'
+```
