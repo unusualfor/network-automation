@@ -256,7 +256,7 @@ netconf-console2 --host localhost --port 830 --user admin --password admin --db 
 
 Retrieve current configuration of *startup* datastore with *netconf-console2*, by filtering per the *interfaces* xpath:
 ```bash
-netconf-console2 --host localhost --port 830 --user admin --password admin --db running --get-config -x /interfaces
+netconf-console2 --host localhost --port 830 --user admin --password admin --db startup --get-config -x /interfaces
 ```
 
 Retrieve current configuration of *startup* datastore with *netconf-console2*, by filtering per the *eth0 interface* xpath:
